@@ -6,6 +6,7 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const dotenv = require('dotenv');
 const path = require('path');
+const errorHandler = require('./middleware/errorHandler');
 
 // Import routes
 const postRoutes = require('./routes/posts');
@@ -40,18 +41,12 @@ app.use('/api/posts', postRoutes);
 app.use('/api/categories', categoryRoutes);
 app.use('/api/auth', authRoutes);
 
+// Error handling middleware
+app.use(errorHandler);
+
 // Root route
 app.get('/', (req, res) => {
   res.send('MERN Blog API is running');
-});
-
-// Error handling middleware
-app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(err.statusCode || 500).json({
-    success: false,
-    error: err.message || 'Server Error',
-  });
 });
 
 // Connect to MongoDB and start server
